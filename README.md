@@ -24,7 +24,7 @@
 
 ​	首先是时钟，我们高速时钟选择外部晶振，这个步骤会使我们使能我们的GPIOF。
 
-![](.\Pic\1.png)
+![RCC配置](.\Pic\1.png)
 
 ​	外部晶振的大小是24MHZ，记住这一点。我们需要在时钟树界面配置使系统主频达到80MHZ。
 
@@ -34,11 +34,11 @@
 
 ​	然后更改Project Mananger界面，打开Project侧栏。只更改Project Settings。文件路径建议全英文，这样不容易出问题。
 
-![](.\Pic\3.png)
+![工程配置](.\Pic\3.png)
 
 而在Code Generator中我们选定生成独立的.c.h文件。
 
-![](.\Pic\4.png)
+![工程配置2](.\Pic\4.png)
 
 ​	此时点击Generate Code,生成文档。我们将此文档复制一份，打开新文档，按照CT117E-M4产品手册里的方法配置Keil5软件。配置完成之后，打开文件，对大量的注释块进行删除。
 
@@ -143,7 +143,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 ​	简单看一下操作原理。
 
-![](.\Pic\5.png)
+![led原理图](.\Pic\5.png)
 
 ​	GPIO口与LED小灯的连接经过一个锁存器，锁存器由PD2所控制，PD2输出高电平时，PC8-15才能去控制LED，而PD2输出低电平时，我们的小灯会在原来的状态被锁住……亮的保持亮，暗的继续暗。
 
@@ -173,7 +173,7 @@ void Led_Disp(uint8_t ucLed)
 
 #### ②KEY
 
-![](.\Pic\6.png)
+![key原理图](.\Pic\6.png)
 
 ​	按键需要注意，当按键按下时，我们的GPIO**读取的电平为低电平**；没有被按下时，我们的电平为高电平。配置上，输入模式（一定注意，不要在和LED一起配置时将其配置为输出）。外部是配置了高电平的，我们不用对其上下拉，浮空即可。
 
@@ -395,15 +395,15 @@ void Lcd_Proc(void)
 
 ​	我们先在芯片图示化区激活需要的ADC引脚，而后在侧边找到Analog区域，找到相应ADC，点击后：
 
-![](D:\E\Gxct\Pic\9.png)
+![ADC1](D:\E\Gxct\Pic\9.png)
 
 选择单端输入，在下方配置界面：
 
-![](.\Pic\7.png)
+![ADC2](.\Pic\7.png)
 
 重点是独立模式，异步时钟除2，分辨率改为最高的12bit。
 
-![](D:\E\Gxct\Pic\8.png)
+![ADC3](D:\E\Gxct\Pic\8.png)
 
 而后是将采样周期选择最大640.5。此时即可生成代码
 
@@ -461,13 +461,13 @@ LCD_DisplayStringLine(Line2, LCD_Str);
 
 ##### 配置
 
-![](.\Pic\10.png)
+![PWMOUT1](.\Pic\10.png)
 
 在Pinout view中，我们只选择一个PWM生成模式，其余先不必去更改。
 
 这里时钟源的选择默认Display，实际来看和内部时钟没有大的区别。
 
-![](.\Pic\11.png)
+![PWMOUT2](.\Pic\11.png)
 
 时钟预分频器设置为 80-1 这样保证我们的定时器产生的脉冲为1mhz，自动重装载寄存器（ARR）和比较寄存器（Pulse）设置参考我们的需求。我们这里的自动重装载寄存器值为1000-1，产生的pwm信号的频率也就是1KHZ，如果是500，产生的频率是2KHZ。
 
@@ -499,7 +499,7 @@ __HAL_TIM_SetCompare(&htim, Channel, (uint16_t)pwm_duty_pulse);
 
 ​	首先，我们输入来的PWM信号是从哪来的呢？我们开发板上板载两个方波信号发生器：
 
-![](D:\E\Gxct\Pic\13.png)
+![PWMIN1](D:\E\Gxct\Pic\13.png)
 
 
 
@@ -509,7 +509,7 @@ __HAL_TIM_SetCompare(&htim, Channel, (uint16_t)pwm_duty_pulse);
 
 ​	配置上我们以PA15为例：
 
-![](.\Pic\12.png)
+![PWMIN2](.\Pic\12.png)
 
 从模式选择Reset模式（具体原因我还不太明白），边缘选择TI1FP1，时钟也选择内部时钟。
 
@@ -517,9 +517,9 @@ __HAL_TIM_SetCompare(&htim, Channel, (uint16_t)pwm_duty_pulse);
 
 同时我们需要开启中断：这里需要注意，TIM8和TIM3中断配置界面不一样
 
-![](.\Pic\14.png)
+![TIM_NVIC](.\Pic\14.png)
 
-![](.\Pic\15.png)
+![NVIC](.\Pic\15.png)
 
 生成的中断代码也是略有不同，心里要有印象。
 
@@ -570,7 +570,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 
 ​	有关串口的一些知识也是以后补充，这里仍只说配置要点。根据相应资料，我们选择PA9,PA10两引脚作为USART的TX和RX。要先选择，因为默认的端口并不是这俩。选择之后再进行如下配置：
 
-​	![](.\Pic\16.png)
+​	![UART1](.\Pic\16.png)
 
 模式选择异步模式，下面的参数我们大多数采用默认，只有波特率可能会改成9600。
 
@@ -613,7 +613,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 ​	有一个好消息，我们的I2C驱动代码不用我们手动配置；也有个坏消息，我们需要手写两个外设的I2C通讯。同上，我们这里不详细讲述I2C到底是什么，只是代码的编写。
 
-![](.\Pic\17.png)
+![I2C1](.\Pic\17.png)
 
 在底层驱动代码中，有我们需要的HAL库驱动代码。我们将其移植到我们的工程中。
 
@@ -678,7 +678,7 @@ unsigned char I2CWaitAck(void)
 
 ​	24C02是一个存储器，能实现离电后数据的存储。下面是手册的原文。
 
-![](.\Pic\i2c.jpg)
+![24C02](.\Pic\i2c.jpg)
 
 1 ，设备地址有7位（0xAn），但我们看作8位, 最后一位标志着读写 (写为0，读为1，0xA0和0xA1)。
 2 ，设备发数据等芯片应答, 设备收数据给芯片发应答 。
@@ -740,7 +740,7 @@ void iic_24C02_Read(uint8_t ucAddr,uint8_t *pucBuf,uint8_t ucNum)
 
 ​	这玩意压根没见用过，但来都来了，搞吧。写入读取相比24C02更加简单。
 
-![](.\Pic\18.png)
+![MCP4017](.\Pic\18.png)
 
 手册上给的并不好看，直接记忆也无妨：
 

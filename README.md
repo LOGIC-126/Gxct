@@ -24,21 +24,21 @@
 
 ​	首先是时钟，我们高速时钟选择外部晶振，这个步骤会使我们使能我们的GPIOF。
 
-![RCC配置](.\Pic\1.png)
+![RCC配置](./Pic/1.png)
 
 ​	外部晶振的大小是24MHZ，记住这一点。我们需要在时钟树界面配置使系统主频达到80MHZ。
 
-![](.\Pic\2.png)
+![](./Pic/2.png)
 
 ​	选择外部时钟，24MHZ，3分配 *20 /2，选择锁相环控制，得到系统主频80MHZ。
 
 ​	然后更改Project Mananger界面，打开Project侧栏。只更改Project Settings。文件路径建议全英文，这样不容易出问题。
 
-![工程配置](.\Pic\3.png)
+![工程配置](./Pic/3.png)
 
 而在Code Generator中我们选定生成独立的.c.h文件。
 
-![工程配置2](.\Pic\4.png)
+![工程配置2](./Pic/4.png)
 
 ​	此时点击Generate Code,生成文档。我们将此文档复制一份，打开新文档，按照CT117E-M4产品手册里的方法配置Keil5软件。配置完成之后，打开文件，对大量的注释块进行删除。
 
@@ -143,7 +143,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 ​	简单看一下操作原理。
 
-![led原理图](.\Pic\5.png)
+![led原理图](./Pic/5.png)
 
 ​	GPIO口与LED小灯的连接经过一个锁存器，锁存器由PD2所控制，PD2输出高电平时，PC8-15才能去控制LED，而PD2输出低电平时，我们的小灯会在原来的状态被锁住……亮的保持亮，暗的继续暗。
 
@@ -173,7 +173,7 @@ void Led_Disp(uint8_t ucLed)
 
 #### ②KEY
 
-![key原理图](.\Pic\6.png)
+![key原理图](./Pic/6.png)
 
 ​	按键需要注意，当按键按下时，我们的GPIO**读取的电平为低电平**；没有被按下时，我们的电平为高电平。配置上，输入模式（一定注意，不要在和LED一起配置时将其配置为输出）。外部是配置了高电平的，我们不用对其上下拉，浮空即可。
 
@@ -381,6 +381,7 @@ void Lcd_Proc(void)
     //数据显示逻辑
     sprintf((char *)Lcd_str ,"    data:%d",data);
 	LCD_DisplayStringLine(Line1,Lcd_str);
+    
 }
 
 ```
@@ -395,15 +396,15 @@ void Lcd_Proc(void)
 
 ​	我们先在芯片图示化区激活需要的ADC引脚，而后在侧边找到Analog区域，找到相应ADC，点击后：
 
-![ADC1](D:\E\Gxct\Pic\9.png)
+![ADC1](./Pic/9.png)
 
 选择单端输入，在下方配置界面：
 
-![ADC2](.\Pic\7.png)
+![ADC2](./Pic/7.png)
 
 重点是独立模式，异步时钟除2，分辨率改为最高的12bit。
 
-![ADC3](D:\E\Gxct\Pic\8.png)
+![ADC3](./Pic/8.png)
 
 而后是将采样周期选择最大640.5。此时即可生成代码
 
@@ -461,13 +462,13 @@ LCD_DisplayStringLine(Line2, LCD_Str);
 
 ##### 配置
 
-![PWMOUT1](.\Pic\10.png)
+![PWMOUT1](./Pic/10.png)
 
 在Pinout view中，我们只选择一个PWM生成模式，其余先不必去更改。
 
 这里时钟源的选择默认Display，实际来看和内部时钟没有大的区别。
 
-![PWMOUT2](.\Pic\11.png)
+![PWMOUT2](./Pic/11.png)
 
 时钟预分频器设置为 80-1 这样保证我们的定时器产生的脉冲为1mhz，自动重装载寄存器（ARR）和比较寄存器（Pulse）设置参考我们的需求。我们这里的自动重装载寄存器值为1000-1，产生的pwm信号的频率也就是1KHZ，如果是500，产生的频率是2KHZ。
 
@@ -499,7 +500,7 @@ __HAL_TIM_SetCompare(&htim, Channel, (uint16_t)pwm_duty_pulse);
 
 ​	首先，我们输入来的PWM信号是从哪来的呢？我们开发板上板载两个方波信号发生器：
 
-![PWMIN1](D:\E\Gxct\Pic\13.png)
+![PWMIN1](./Pic/13.png)
 
 
 
@@ -509,7 +510,7 @@ __HAL_TIM_SetCompare(&htim, Channel, (uint16_t)pwm_duty_pulse);
 
 ​	配置上我们以PA15为例：
 
-![PWMIN2](.\Pic\12.png)
+![PWMIN2](./Pic/12.png)
 
 从模式选择Reset模式（具体原因我还不太明白），边缘选择TI1FP1，时钟也选择内部时钟。
 
@@ -517,9 +518,9 @@ __HAL_TIM_SetCompare(&htim, Channel, (uint16_t)pwm_duty_pulse);
 
 同时我们需要开启中断：这里需要注意，TIM8和TIM3中断配置界面不一样
 
-![TIM_NVIC](.\Pic\14.png)
+![TIM_NVIC](./Pic/14.png)
 
-![NVIC](.\Pic\15.png)
+![NVIC](./Pic/15.png)
 
 生成的中断代码也是略有不同，心里要有印象。
 
@@ -570,7 +571,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 
 ​	有关串口的一些知识也是以后补充，这里仍只说配置要点。根据相应资料，我们选择PA9,PA10两引脚作为USART的TX和RX。要先选择，因为默认的端口并不是这俩。选择之后再进行如下配置：
 
-​	![UART1](.\Pic\16.png)
+​	![UART1](./Pic/16.png)
 
 模式选择异步模式，下面的参数我们大多数采用默认，只有波特率可能会改成9600。
 
@@ -586,7 +587,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 //串口发送函数
 HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
 //使用案例
-AL_UART_Transmit(&huart, (uint8_t *)str, len, 100);
+HAL_UART_Transmit(&huart, (uint8_t *)str, len, 100);
 ```
 
 而串口的接收相对复杂，为了不堵塞程序，我们采用中断接收的方式。
@@ -613,7 +614,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 ​	有一个好消息，我们的I2C驱动代码不用我们手动配置；也有个坏消息，我们需要手写两个外设的I2C通讯。同上，我们这里不详细讲述I2C到底是什么，只是代码的编写。
 
-![I2C1](.\Pic\17.png)
+![I2C1](./Pic/17.png)
 
 在底层驱动代码中，有我们需要的HAL库驱动代码。我们将其移植到我们的工程中。
 
@@ -670,6 +671,7 @@ unsigned char I2CWaitAck(void)
 	SDA_Output_Mode();
     return SUCCESS;
 }
+//25年资料包已修改
 ```
 
 如何记得这件事呢，我们看到这个等待应答函数就应该想到：等一等！然后把**SDA_Output_Mode();**移到最下面。
@@ -678,7 +680,7 @@ unsigned char I2CWaitAck(void)
 
 ​	24C02是一个存储器，能实现离电后数据的存储。下面是手册的原文。
 
-![24C02](.\Pic\i2c.jpg)
+![24C02](./Pic/i2c.jpg)
 
 1 ，设备地址有7位（0xAn），但我们看作8位, 最后一位标志着读写 (写为0，读为1，0xA0和0xA1)。
 2 ，设备发数据等芯片应答, 设备收数据给芯片发应答 。
@@ -736,11 +738,39 @@ void iic_24C02_Read(uint8_t ucAddr,uint8_t *pucBuf,uint8_t ucNum)
 
 这里我们就可以操作24C02去进行写入读取了。
 
+###### 24C02拓展：对其他类型变量的存储
+
+​	我们所编写的**iic_24C02_Wirte**，**iic_24C02_Read**函数是基于字节流（一个字节）来进行传输和储存的，所以我们所传输的数据基本都是一字节的（如uint8_t），而例如float变量，其由4个字节组成，我们需要将其转为有4个元素，每个元素为1字节的数组，再进行存诸和读取。
+
+​	这个功能的实现需要用到C库函数**memcpy()**。
+
+------
+
+​	**描述：**C 库函数 **void \*memcpy(void \*str1, const void \*str2, size_t n)** 从存储区 **str2** 复制 **n** 个字节到存储区 **str1**。*改变的是**str1***。
+
+------
+
+```c
+uint8_t Save_buffer[4];
+float myFloat = 12.34;
+float ReadFloat;
+uint8_t Read_buffer[4];
+
+/*写入浮点数*/
+memcpy(Save_buffer,&myFloat,sizeof(myFloat));
+iic_24C02_Wirte(0x00,Save_buffer,sizeof(Save_buffer));
+/*读取浮点数*/
+iic_24C02_Read(0x00,Read_buffer,sizeof(Read_buffer));
+memcpy(&ReadFloat,Read_buffer,sizeof(ReadFloat));
+```
+
+
+
 ##### MCP4017
 
 ​	这玩意压根没见用过，但来都来了，搞吧。写入读取相比24C02更加简单。
 
-![MCP4017](.\Pic\18.png)
+![MCP4017](./Pic/18.png)
 
 手册上给的并不好看，直接记忆也无妨：
 
@@ -774,6 +804,38 @@ uint8_t Mpc_Read(void)
 }
 ```
 
+### 8.外设&逻辑编写思路
+
+​	考试时间是5个小时，这个时间理论上是充足的，我们整理一下我们的思路。
+
+​	首先由cubeMX生成源工程代码Source，其次复制，将其复制到另一个文件夹Object。此时，在Inc和Src中新建我们的BSP文件夹，同时参考题目，新建和移植我们所需外设的工程.c.h文件，并将他们添加到工程中。这个过程尽量快，尽量不要出错。
+
+​	外设处理完成之后就是应用层程序的编写，如果此时我们的题目相当复杂，也可以单独封装一个.h.c文件。应用层需要花些心思。但是题目一定是围绕我们的外设相应展开。
+
+​	一些东西是我们的良好工具：
+
+- 状态机
+	
+- 按键读取值(Key_Up,Key_Down)
+	
+- uwTick值计时
+	
+- sprintf(),memcpy()等C库函数。
+	
+- Debug调试器
+	
+- 位运算
+	
+- 枚举（enum）
+#### Bug调试
+
+​	写的程序基本上会出错，遇到bug不要急，我们有Debug调试器，调试就是，为了更高效的去使用调试器，我们避免成无头苍蝇，按一定的顺序和思路去寻找到底是哪里出了问题。
+
+1. 查看外设代码是否正确配置。
+2. 从头或从尾开始代码Debug，找出代码从哪个步骤开始出问题的。
+3. 相应打断点，运行。
+4. 尝试修改。
+
 ### The End
 
 ​	我们对我们配置的外设进行一定的总结：
@@ -789,4 +851,38 @@ uint8_t Mpc_Read(void)
 
 这个表是根据我个人的CodeMX做的，更换版本就很有可能不同……比赛又更换了版本，我得再试试。
 
+2025年4月2日更新：比赛的CubeMX版本为6.14.0，目前使用起来问题不大，经过测试，不再从System Clock Configuration中生成文件。这对于我们是个好消息。
+
+2025年4月6日更新：比赛资料包已经给出：
+
+![](./Pic/19.png)
+
+不详细解释，只是Tools里有CudeMX6.14.0安装包，以防万一，在CudeMX中的Help界面可以安装器件包。同样给出了keil的器件包，在keil中导入器件包（下图）。
+
+![](./Pic/20.png)
+
+![](./Pic/21.png)
+
+![](./Pic/22.png)
+
 ​	主观题现在就总结到这个程度。早春的月光清冷地随凉风透过半开的窗户，窗户的玻璃上又随灯光反射着我和电脑、键盘的影子。虽说我常质疑意义这个东西是否有意义，此时又不免思考：我做这一切的意义是什么，究竟想要的是什么。大抵，比赛的目的也只是为了知识。浮名会散去，荣誉会散去，唯有知识是留存在自己身上的，这哗啦哗啦一长篇下来啊，你估计也明白了，我们此行的目的几乎已经达到了。
+
+------
+
+比赛时间：（25）4月13日周日9：00 —— 14：00
+
+看考场：（25）4月12日周六 15--16点
+
+身份证	准考证
+黑色签字笔（考场提供草稿纸）
+
+带饭（方便的，别太离谱的）
+
+可以自带比赛用板（单片机？）
+可以自带 万用表 示波器
+可以自带鼠标（不能带键盘：血和泪）？？？
+
+以上交给工作人员
+
+------
+

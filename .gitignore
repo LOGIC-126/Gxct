@@ -3,3 +3,16 @@ MDK-ARM/
 *.uvprojx
 .vscode/
 *.uvoptx
+*.log
+*.s
+*.o
+*.icf
+*.axf
+*.map
+*.bin
+*.hex
+*.elf
+*.d
+*.lst
+*.bak
+*.tmp

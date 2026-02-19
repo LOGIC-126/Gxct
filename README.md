@@ -4,17 +4,162 @@
 
 
 
+## 零、前置知识
+
+​	基础不牢，地动山摇。这里简单补充一下一些可能需要的前置知识。
+
+### 1、运算
+
+#### 算术运算符
+
+​	很简单，不叨扰。
+
+| 运输符 |           运算           |
+| :----: | :----------------------: |
+|   +    |            加            |
+|   -    |            减            |
+|   *    |            乘            |
+|   /    |            除            |
+|   %    | 取模运算符，整除后的余数 |
+|   ++   | 自增运算符，整数值增加 1 |
+|   --   | 自减运算符，整数值减少 1 |
+
+​	务必熟记他们的作用（尤其是自增自减），在一些数学处理中会有很大作用。
+
+#### 关系运算符
+
+假设变量 **A** 的值为 10，变量 **B** 的值为 20，则：
+
+|运算符  |描述 |实例|
+| ---- | ------------------------------------------------------------ | --------------- |
+| ==   | 检查两个操作数的值是否相等，如果相等则条件为真。             | (A == B) 为假。 |
+| !=   | 检查两个操作数的值是否相等，如果不相等则条件为真。           | (A != B) 为真。 |
+| >    | 检查左操作数的值是否大于右操作数的值，如果是则条件为真。     | (A > B) 为假。  |
+| <    | 检查左操作数的值是否小于右操作数的值，如果是则条件为真。     | (A < B) 为真。  |
+| >=   | 检查左操作数的值是否大于或等于右操作数的值，如果是则条件为真。 | (A >= B) 为假。 |
+| <=   | 检查左操作数的值是否小于或等于右操作数的值，如果是则条件为真。 | (A <= B) 为真。 |
+
+​	主要运用在条件判断中。
+
+#### 逻辑运算符
+
+假设变量 **A** 的值为 1，变量 **B** 的值为 0，则：
+
+| 运算符 | 描述                                                         | 实例              |
+| :----- | :----------------------------------------------------------- | :---------------- |
+| &&     | 称为逻辑与运算符。如果两个操作数都非零，则条件为真。         | (A && B) 为假。   |
+| \|\|   | 称为逻辑或运算符。如果两个操作数中有任意一个非零，则条件为真。 | (A \|\| B) 为真。 |
+| !      | 称为逻辑非运算符。用来逆转操作数的逻辑状态。如果条件为真则逻辑非运算符将使其为假。 | !(A && B) 为真。  |
+
+​	当下很多人学的第一门编程语言是Python，这三者在Python中便是**and**，**or**，**not**。也多用于条件判断。
+
+#### 位运算符
+
+​	位运算符作用于位，并逐位执行操作。&、 | 和 ^ 的真值表如下所示：
+
+| p    | q    | p & q | p \| q | p ^ q |
+| :--- | :--- | :---- | :----- | :---- |
+| 0    | 0    | 0     | 0      | 0     |
+| 0    | 1    | 0     | 1      | 1     |
+| 1    | 1    | 1     | 1      | 0     |
+| 1    | 0    | 0     | 1      | 1     |
+
+​	**&与，只有二者都为1时才得1；|或，二者只要有1，就得1；^异或，二者不同得1，相同得0。**
+
+假设如果 A = 60，且 B = 13，现在以二进制格式表示，它们如下所示：
+
+A = 0011 1100
+
+B = 0000 1101
+
+\-----------------
+
+A&B = 0000 1100
+
+A|B = 0011 1101
+
+A^B = 0011 0001
+
+~A = 1100 0011
+
+假设变量 **A** 的值为 60，变量 **B** 的值为 13，则：
+
+| 运算符 | 描述                                                         | 实例                                                         |
+| :----- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| &      | 对两个操作数的每一位执行逻辑与操作，如果两个相应的位都为 1，则结果为 1，否则为 0。按位与操作，按二进制位进行"与"运算。运算规则：`0&0=0;    0&1=0;     1&0=0;      1&1=1;` | (A & B) 将得到 12，即为 0000 1100                            |
+| \|     | 对两个操作数的每一位执行逻辑或操作，如果两个相应的位都为 0，则结果为 0，否则为 1。按位或运算符，按二进制位进行"或"运算。运算规则：`0|0=0;    0|1=1;    1|0=1;     1|1=1;` | (A \| B) 将得到 61，即为 0011 1101                           |
+| ^      | 对两个操作数的每一位执行逻辑异或操作，如果两个相应的位值相同，则结果为 0，否则为 1。异或运算符，按二进制位进行"异或"运算。运算规则：`0^0=0;    0^1=1;    1^0=1;   1^1=0;` | (A ^ B) 将得到 49，即为 0011 0001                            |
+| ~      | 对操作数的每一位执行逻辑取反操作，即将每一位的 0 变为 1，1 变为 0。取反运算符，按二进制位进行"取反"运算。运算规则：`~1=-2;    ~0=-1;` | (~A ) 将得到 -61，即为 1100 0011，一个有符号二进制数的补码形式。 |
+| <<     | 将操作数的所有位向左移动指定的位数。左移 n 位相当于乘以 2 的 n 次方。二进制左移运算符。将一个运算对象的各二进制位全部左移若干位（左边的二进制位丢弃，右边补0）。 | A << 2 将得到 240，即为 1111 0000                            |
+| >>     | 将操作数的所有位向右移动指定的位数。右移n位相当于除以 2 的 n 次方。二进制右移运算符。将一个数的各二进制位全部右移若干位，正数左补 0，负数左补 1，右边丢弃。 | A >> 2 将得到 15，即为 0000 1111                             |
+
+#### 赋值运算符
+
+| 运算符 | 描述                                                         | 实例                            |
+| :----- | :----------------------------------------------------------- | :------------------------------ |
+| =      | 简单的赋值运算符，把右边操作数的值赋给左边操作数             | C = A + B 将把 A + B 的值赋给 C |
+| +=     | 加且赋值运算符，把右边操作数加上左边操作数的结果赋值给左边操作数 | C += A 相当于 C = C + A         |
+| -=     | 减且赋值运算符，把左边操作数减去右边操作数的结果赋值给左边操作数 | C -= A 相当于 C = C - A         |
+| *=     | 乘且赋值运算符，把右边操作数乘以左边操作数的结果赋值给左边操作数 | C *= A 相当于 C = C * A         |
+| /=     | 除且赋值运算符，把左边操作数除以右边操作数的结果赋值给左边操作数 | C /= A 相当于 C = C / A         |
+| %=     | 求模且赋值运算符，求两个操作数的模赋值给左边操作数           | C %= A 相当于 C = C % A         |
+| <<=    | 左移且赋值运算符                                             | C <<= 2 等同于 C = C << 2       |
+| >>=    | 右移且赋值运算符                                             | C >>= 2 等同于 C = C >> 2       |
+| &=     | 按位与且赋值运算符                                           | C &= 2 等同于 C = C & 2         |
+| ^=     | 按位异或且赋值运算符                                         | C ^= 2 等同于 C = C ^ 2         |
+| \|=    | 按位或且赋值运算符                                           | C \|= 2 等同于 C = C \| 2       |
+
+### 2、状态机
+
+​	状态机是一种将复杂逻辑可视化和结构化的思维模型。它通过**状态**、**事件**和**转移**这三个核心要素，清晰地定义了事物的行为规则。在处理任何包含明确阶段和规则的生命周期问题时，状态机都是一个非常值得考虑的解决方案。
+
+​	<img src=".\Pic\23.png" alt="状态机介绍" style="zoom:33%;" />
+
+​	LCD显示屏在切换界面时，常使用状态机来管理不同的显示内容。下面以一个简单的例子说明：假设我们需要显示两个界面（界面1和界面2），通过一个状态变量来控制当前显示哪个界面。
+
+首先，定义一个枚举类型来表示所有可能的界面状态：
+
+```c
+typedef enum {
+    SCREEN_1,   // 界面1
+    SCREEN_2    // 界面2
+} ScreenState;
+
+ScreenState State = SCREEN_1;  // 初始状态为界面1
+```
+
+循环中，根据当前状态调用对应的显示函数，并检测按键按下来改变状态：
+
+```c
+while (1) {
+    switch (State) {
+        case SCREEN_1:
+            displayScreen1();   // 显示界面1的内容
+            if (keydown()) {  // 检测到切换按键
+                currentState = SCREEN_2;  // 切换到界面2
+            }
+            break;
+        case SCREEN_2:
+            displayScreen2();   // 显示界面2的内容
+            if (keydown()) {
+                currentState = SCREEN_1;  // 切换回界面1
+            }
+            break;
+    }
+}
+```
+
 ## 一，主观题
 
 ### 引言：
 
-​	在此只作为一个学习上的记录，方便我们代码上的查阅，也是知识的一种总汇，屁话不多说了，干吧。
+​	不由的说，这是第二次踏上备赛历程，一年了，很多变化也不由让人感叹，仍然屁话不多说了，干吧。
 
-​																		2025年3月28日 日子人
+​																			2026年2月19日 日子人
 
 ### 0.总说
 
-​	本文档基于蚂蚁工厂的蓝桥杯嵌入式课程整理，延续其大致思路（CodeMx只作为配置工具，将其生成的代码细化拆分再合并为新工程），孰优孰劣，还很难说。如今最好延续。
+​	本文档基于蚂蚁工厂的蓝桥杯嵌入式课程整理，其大致思路为（CodeMx只作为配置工具，将其生成的代码细化拆分再合并为新工程），孰优孰劣，还很难说。如今在此基础上进行一定的改良，争取缩短硬件配置的时间。
 
 ​	本文档的主要目的是记录一些代码思路和配置信息，比赛确是学习的好方式，期间也多有收获，仅此作为记录。
 
@@ -24,116 +169,23 @@
 
 ​	首先是时钟，我们高速时钟选择外部晶振，这个步骤会使我们使能我们的GPIOF。
 
-![RCC配置](./Pic/1.png)
+![RCC配置](D:/E/Gxct_26/Pic/1.png)
 
 ​	外部晶振的大小是24MHZ，记住这一点。我们需要在时钟树界面配置使系统主频达到80MHZ。
 
-![](./Pic/2.png)
+![](D:/E/Gxct_26/Pic/2.png)
 
-​	选择外部时钟，24MHZ，3分配 *20 /2，选择锁相环控制，得到系统主频80MHZ。
+​	选择外部时钟，24MHZ，3分配 *20 /2，选择锁相环控制，得到系统主频80MHZ。也可以选择外部时钟，锁相环控制后，直接输入80MHZ，软件会自己计算分配数值。
 
 ​	然后更改Project Mananger界面，打开Project侧栏。只更改Project Settings。文件路径建议全英文，这样不容易出问题。
 
-![工程配置](./Pic/3.png)
+![工程配置](D:/E/Gxct_26/Pic/3.png)
 
 而在Code Generator中我们选定生成独立的.c.h文件。
 
 ![工程配置2](./Pic/4.png)
 
-​	此时点击Generate Code,生成文档。我们将此文档复制一份，打开新文档，按照CT117E-M4产品手册里的方法配置Keil5软件。配置完成之后，打开文件，对大量的注释块进行删除。
-
-​	此时main.c文件里不仅只有主函数，还有其他三个函数。
-
-```c
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
-  /** Configure the main internal regulator output voltage
-  */
-  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV3;
-  RCC_OscInitStruct.PLL.PLLN = 20;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
-  /* USER CODE END Error_Handler_Debug */
-}
-
-#ifdef  USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
-}
-#endif /* USE_FULL_ASSERT */
-```
-
-​	为了简洁和优雅，我们将SystemClock_Config() Error_Handler()函数移植到一个新文件里，而assert_failed函数，可以直接删除。此时工程里有gpio.c文件，我们可以将其中的
-
-```c
-  __HAL_RCC_GPIOF_CLK_ENABLE();
-```
-
-转移到SystemClock_Config中。
-
-​	此时，我们的工程文档的基础已经打好，下面就可以开始进行我们外设的配置。
+​	此时，我们的工程文档的基础已经打好，下面就可以开始进行我们外设的配置。与上次不同，这一次我们直接在生成的文档里进行编写。
 
 ### 2.三大金刚——LED KEY LCD外设
 
@@ -143,15 +195,13 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 ​	简单看一下操作原理。
 
-![led原理图](./Pic/5.png)
+![led原理图](D:/E/Gxct_26/Pic/5.png)
 
-​	GPIO口与LED小灯的连接经过一个锁存器，锁存器由PD2所控制，PD2输出高电平时，PC8-15才能去控制LED，而PD2输出低电平时，我们的小灯会在原来的状态被锁住……亮的保持亮，暗的继续暗。
+​	GPIO口与LED小灯的连接经过一个**锁存器**，锁存器由PD2所控制，PD2输出高电平时，PC8-15才能去控制LED，而PD2输出低电平时，我们的小灯会在原来的状态被锁住……亮的保持亮，暗的继续暗。
 
-​	小灯的一端是高电平，故我们将GPIO置低小灯会亮。而且我们一开始希望灯是灭的，那么我们的PD应该为LOW，而PC应该为HIGH，速度为LOW就可以。都选择推挽输出模式。这样生成的void MX_GPIO_Init(void)就可以作为我们的LED_Init(void)，但此时先不要这么做，为了省事，我可以继续将按键的生成代码一并生成再复制。
+​	小灯的一端是高电平，故我们将**GPIO置低**小灯会亮。而且我们一开始希望灯是灭的，那么我们的PD应该为LOW，而PC应该为HIGH，速度为LOW就可以。都选择推挽输出模式。这样就在gpio.c里面生成了**void MX_GPIO_Init(void)。**
 
-​	*我个人在此也有些疑问，我们的PD2需不需要上下拉，官方和课程例程中都没有上下拉，但此处我觉着下拉更好，此处存疑。所有的PC引脚都不需要上下拉。*
-
-此处为LED点亮代码：
+我们在gpio.c中后面的代码注释中间加入：
 
 ```c
 void Led_Disp(uint8_t ucLed)
@@ -173,7 +223,7 @@ void Led_Disp(uint8_t ucLed)
 
 #### ②KEY
 
-![key原理图](./Pic/6.png)
+![key原理图](D:/E/Gxct_26/Pic/6.png)
 
 ​	按键需要注意，当按键按下时，我们的GPIO**读取的电平为低电平**；没有被按下时，我们的电平为高电平。配置上，输入模式（一定注意，不要在和LED一起配置时将其配置为输出）。外部是配置了高电平的，我们不用对其上下拉，浮空即可。
 
@@ -192,31 +242,6 @@ uint8_t Key_Scan(void)
 	if (HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_0) == GPIO_PIN_RESET)
 		Key_Val = 4;
 	return Key_Val;
-}
-```
-
-```c
-void Key_Proc(void)
-{
-	if((uwTick - Key_uwTick_Set) < Key_Peroid)
-		return;
-	Key_uwTick_Set = uwTick;
-	
-
-	Key_Val = Key_Scan();
-	Key_Down = Key_Val & (Key_Val ^ Old_Key_Val);
-	Key_Up = ~Key_Val & (Key_Val ^ Old_Key_Val);
-	Old_Key_Val = Key_Val;
-
-	if (Key_Down == 1)
-		Key_Proc1();
-	else if(Key_Down == 2)
-		Key_Proc2();
-	else if(Key_Down == 3)
-		Key_Proc3();
-	else if(Key_Down == 4)
-		Key_Proc4();
-
 }
 ```
 
@@ -362,7 +387,7 @@ void Lift_Proc(void)
 
 #### ③LCD
 
-​	LCD的程序在真实比赛中配置相对简单，因为比赛资料会给出我们的LCD驱动程序，我们要写的只有显示逻辑。在显示上需要用到sprintf()函数，这个函数的使用方式我经常忘记。
+​	LCD的程序在真实比赛中配置相对简单，因为比赛资料会给出我们的LCD驱动程序，我们要写的只有显示逻辑。在显示上需要用到**sprintf()**函数，这个函数的使用方式我经常忘记。
 
 ```c
 sprintf((char *)Lcd_str ,"    data:%d",data);
@@ -386,503 +411,16 @@ void Lcd_Proc(void)
 
 ```
 
+​	简单做了个动画演示，箭头代表程序运行进程。
+
+![24](.\Pic\24.gif)
+
 实现具体功能多参考官方给出的示例代码，我还其中发现其中还有不少好玩的东西。以后有空可以试试。
 
-### 3.ADC编写
+**参考文献**
 
-##### 配置
+[C 运算符 | 菜鸟教程](https://www.runoob.com/cprogramming/c-operators.html)
 
-​	我们的开发板上有两个旋钮可变电阻和一个I2C可编程电阻，都可以用ADC的方式来读取其上分压。ADC的工作方式和原理是有些复杂的，我们的代码只会采用最简单的方式就足够了，在配置上：
+[(83 封私信 / 80 条消息) 介绍一个超级实用的编程思想——状态机 - 知乎](https://zhuanlan.zhihu.com/p/18598358411)
 
-​	我们先在芯片图示化区激活需要的ADC引脚，而后在侧边找到Analog区域，找到相应ADC，点击后：
-
-![ADC1](./Pic/9.png)
-
-选择单端输入，在下方配置界面：
-
-![ADC2](./Pic/7.png)
-
-重点是独立模式，异步时钟除2，分辨率改为最高的12bit。
-
-![ADC3](./Pic/8.png)
-
-而后是将采样周期选择最大640.5。此时即可生成代码
-
-##### 代码移植
-
-​	我们Source中会生成一个adc.c文件，从中我们copy除了MspDeInit之外（不会用到）的所有代码，在Object文件中建立相应外设文件，并清除注释。
-
-​	1.在添加库文件时，我们需要将三个库文件都添加过来：**stm32g4xx_hal_adc.c  stm32g4xx_hal_adc_ex.c  stm32g4xx_ll_adc.c**
-
-​	2.找到main.h头文件，一路Open过去，一路找到**stm32g4xx_hal_conf.h**开启其中被注释掉的  **#define HAL_ADC_MODULE_ENABLED**
-
-​	3.我们还需要在系统时钟定义中，我的版本的时钟定义生成到了main.c中，我们将其移植到我们的**SystemClock_Config(void)**函数中。
-
-​	完成这三项工作，我们的ADC就可以使用了
-
-使用方法：
-
-```c
-uint16_t getADC1(void)
-{
-	uint16_t adc_val;
-	HAL_ADC_Start(&hadc1);
-	adc_val = HAL_ADC_GetValue(&hadc1);
-	return adc_val;
-}
-```
-
-​	此函数读取的值并不是单纯的电压值，根据ADC的原理，我们应该将其/4096 再x3.3。
-
-​	在进行这一步时需要注意，要注意浮点数数制的转换。
-
-​	我们可以：
-
-```c
-sprintf((char*)LCD_Str,"Val1:%.3f",((((float)getADC1())/4096)*3.3));
-LCD_DisplayStringLine(Line2, LCD_Str);
-```
-
-​	也可以
-
-```c
-sprintf((char*)LCD_Str,"Val1:%.3f",((getADC1()/4096.0)*3.3));
-LCD_DisplayStringLine(Line2, LCD_Str);
-```
-
-​	错误示例我这里就不放了……也是犯了很多错误，导致最后的数值有问题。
-
-### 4.PWM输出编写
-
-​	不要好奇整理的顺序，这都是根据比赛考频一一整理的，PWM也是经常考察的点，而PWM的输出得借助定时器，我们这里便说说定时器的配置。
-
-​	同上，为节省时间，我们不先对底层进行过多阐述。只着色于我们CodeMX配置和编写。
-
-​	看了眼教程发现这还是挺乱的，我自己写吧。PWM的输出底层原理上应该是相对复杂，但是在我们实际操作中还算简单。
-
-##### 配置
-
-![PWMOUT1](./Pic/10.png)
-
-在Pinout view中，我们只选择一个PWM生成模式，其余先不必去更改。
-
-这里时钟源的选择默认Display，实际来看和内部时钟没有大的区别。
-
-![PWMOUT2](./Pic/11.png)
-
-时钟预分频器设置为 80-1 这样保证我们的定时器产生的脉冲为1mhz，自动重装载寄存器（ARR）和比较寄存器（Pulse）设置参考我们的需求。我们这里的自动重装载寄存器值为1000-1，产生的pwm信号的频率也就是1KHZ，如果是500，产生的频率是2KHZ。
-
-​	此时即可生成代码，然后移植，移植相对简单。如果没记错的话，我的底层库里自动包含TIM库，PWM输出不依赖中断，系统时钟的初始化函数也不需要修改。
-
-##### PWM操作
-
-​	配置并移植完成以后，我们要启动PWM输出：
-
-```c
-//启动pwm输出
-HAL_TIM_PWM_Start(&htim,TIM_CHANNEL_1);
-//停止pwm输出
-HAL_TIM_PWM_Stop(&htim,TIM_CHANNEL_1);
-```
-
-​	我们通过操作ARR和Compare值来对PWM方波进行调制。需要用到的HAL库函数为：
-
-```c
-//配置PWM频率
-__HAL_TIM_SetAutoreload(&htim, (uint16_t)pwm_freq_arr);
-//配置PWM占空比    
-__HAL_TIM_SetCompare(&htim, Channel, (uint16_t)pwm_duty_pulse);
-```
-
-​	这样我们的PWM方波便能够随意调节。
-
-### 5.PWM输入（输入比较）
-
-​	首先，我们输入来的PWM信号是从哪来的呢？我们开发板上板载两个方波信号发生器：
-
-![PWMIN1](./Pic/13.png)
-
-
-
-​	从PA15,PB4输入两路信号，他们分别为TIM8，TIM3的通道1。
-
-##### 配置
-
-​	配置上我们以PA15为例：
-
-![PWMIN2](./Pic/12.png)
-
-从模式选择Reset模式（具体原因我还不太明白），边缘选择TI1FP1，时钟也选择内部时钟。
-
-通道1选择输入捕获直接模式，通道2选择输入捕获间接模式。
-
-同时我们需要开启中断：这里需要注意，TIM8和TIM3中断配置界面不一样
-
-![TIM_NVIC](./Pic/14.png)
-
-![NVIC](./Pic/15.png)
-
-生成的中断代码也是略有不同，心里要有印象。
-
-代码的移植这里可以和其他TIM相关外设一起配置一起移植，步骤都差不多，这里不再多说。
-
-##### 得到频率和占空比
-
-​	同pwm输出类似，我们的输入捕获也需要代码打开：
-
-```c
-	HAL_TIM_IC_Start_IT(&htim8,TIM_CHANNEL_1);
-	HAL_TIM_IC_Start_IT(&htim8,TIM_CHANNEL_2);
-```
-
-​	开启时要打开两个，且以中断形式打开。不过这里存疑：我们需不需要再启动定时器。*等待测试。*
-
-​	这一段代码也相对固定，而且这一段代码有时候也可能作为简易示波器使用：
-
-```c
-//TIM3和TIM8都是这个中断回调函数，将相关量改为相应定时器即可。
-
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
-{
-	if(htim->Instance == TIM8)	//定时器判别
-	{
-		if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) //通道判别
-		{
-			PWM_Up_Cnt = HAL_TIM_ReadCapturedValue(&htim8,TIM_CHANNEL_1)+1;
-			Duty = (float)PWM_Down_Cnt/PWM_Up_Cnt;
-		}
-		else if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)	//通道判别
-		{
-			PWM_Down_Cnt = HAL_TIM_ReadCapturedValue(&htim8,TIM_CHANNEL_2)+1;
-		}
-	}
-}
-```
-
-如何去理解等我哪天心情好再写……
-
-​	如果记不住相应结构体怎么写，我们就对着**htim8**一路F12，多少能找到相应的。
-
-### 6.串口编写
-
-​	串口的使用我们仍采用最简单的方式，数据的发送是直接发送，但是接收我们采用中断接收。板载USB转串口，简单来说数据线插在USB1上时就能实现串口通信。（欸？你说USB2咋还没咋用过）我们直接开始配置。
-
-##### 配置
-
-​	有关串口的一些知识也是以后补充，这里仍只说配置要点。根据相应资料，我们选择PA9,PA10两引脚作为USART的TX和RX。要先选择，因为默认的端口并不是这俩。选择之后再进行如下配置：
-
-​	![UART1](./Pic/16.png)
-
-模式选择异步模式，下面的参数我们大多数采用默认，只有波特率可能会改成9600。
-
-如此即可直接生成代码，此时，我们的源工程中会生成一个usart.c文件，以同上类似的方式将其移植。
-
-注意，系统时钟配置里也会生成一段代码，但是我前几次测试忽略了，结果代码也能用（……）很迷惑。有可能是因为默认配置之类的。
-
-##### 代码编写
-
-串口的发送及其简单：
-
-```c
-//串口发送函数
-HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-//使用案例
-HAL_UART_Transmit(&huart, (uint8_t *)str, len, 100);
-```
-
-而串口的接收相对复杂，为了不堵塞程序，我们采用中断接收的方式。
-
-```c
-//在初始化完串口之后，我们需要开启第一次中断
-HAL_UART_Receive_IT(&huart1,Uart_Rx_Str,7);
-```
-
-```c
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if(huart == &huart1)
-	{
-		HAL_UART_Receive_IT(&huart1,Uart_Rx_Str,7);
-	}
-}
-
-```
-
-我们编写串口中断回调函数（这里也提醒我们转移it.c里面的文件），在每次中断回调之后都再次开启一次接收中断。也可以在此函数中编写对串口接收到的信息进行进一步处理。
-
-### 7.I2C编写
-
-​	有一个好消息，我们的I2C驱动代码不用我们手动配置；也有个坏消息，我们需要手写两个外设的I2C通讯。同上，我们这里不详细讲述I2C到底是什么，只是代码的编写。
-
-![I2C1](./Pic/17.png)
-
-在底层驱动代码中，有我们需要的HAL库驱动代码。我们将其移植到我们的工程中。
-
-```c
-//驱动代码
-void I2CStart(void);
-void I2CStop(void);
-unsigned char I2CWaitAck(void);
-void I2CSendAck(void);
-void I2CSendNotAck(void);
-void I2CSendByte(unsigned char cSendByte);
-unsigned char I2CReceiveByte(void);
-void I2CInit(void);
-```
-
-移植就是简单的复制粘贴，移植完成后就是我们的中间层驱动代码的编写，中间层驱动代码如果说要是完全背下来，应该是相对困难的，不过好在也难在我们有手册，可以基于手册去进行记忆。
-
-还有一点就是，参考文档有一点可能需要更改。
-
-```c
-/**
-  * @brief I2C等待确认信号
-  * @param None
-  * @retval None
-  */
-unsigned char I2CWaitAck(void)
-{
-    unsigned short cErrTime = 5;
-    SDA_Input_Mode();
-    delay1(DELAY_TIME);
-    SCL_Output(1);
-    delay1(DELAY_TIME);
-    while(SDA_Input())
-    {
-        cErrTime--;
-        delay1(DELAY_TIME);
-        if (0 == cErrTime)
-        {
-            SDA_Output_Mode();
-            I2CStop();
-            return ERROR;
-        }
-    }
-    //*************************************************//
-    //SDA_Output_Mode();
-    //SCL_Output(0);
-    //delay1(DELAY_TIME);
-    //return SUCCESS;
-    //*************************************************//
-    /*	此处代码应该把SDA_Output_Mode();移到最下面
-    */
-    SCL_Output(0);
-    delay1(DELAY_TIME);
-	SDA_Output_Mode();
-    return SUCCESS;
-}
-//25年资料包已修改
-```
-
-如何记得这件事呢，我们看到这个等待应答函数就应该想到：等一等！然后把**SDA_Output_Mode();**移到最下面。
-
-##### 24C02
-
-​	24C02是一个存储器，能实现离电后数据的存储。下面是手册的原文。
-
-![24C02](./Pic/i2c.jpg)
-
-1 ，设备地址有7位（0xAn），但我们看作8位, 最后一位标志着读写 (写为0，读为1，0xA0和0xA1)。
-2 ，设备发数据等芯片应答, 设备收数据给芯片发应答 。
-3 ，读取时假写, 假写时没有停止信号 。
-
-据此，我们可以进行代码的封装。
-
-```c
-//24C02相关代码
-void iic_24C02_Wirte(uint8_t ucAddr,uint8_t *pucBuf,uint8_t ucNum)
-{
-	I2CStart();
-	I2CSendByte(0xa0);
-	I2CWaitAck();
-	
-	I2CSendByte(ucAddr);
-	I2CWaitAck();
-	
-	while(ucNum--)
-	{
-		I2CSendByte(*pucBuf++);
-		I2CWaitAck();
-	}
-	I2CStop();
-	delay1(500);				//为了保证通讯，我们的写操作需要一定延时
-	
-}
-
-void iic_24C02_Read(uint8_t ucAddr,uint8_t *pucBuf,uint8_t ucNum)
-{
-	I2CStart();
-	I2CSendByte(0xa0);
-	I2CWaitAck();
-	
-	I2CSendByte(ucAddr);
-	I2CWaitAck();
-	
-	I2CStart();
-	I2CSendByte(0xa1);
-	I2CWaitAck();
-	
-	while(ucNum--)
-	{
-		*pucBuf++ = I2CReceiveByte();
-		if(ucNum)
-			I2CSendAck();
-		else
-			I2CSendNotAck();
-	}
-	
-	I2CStop();
-}
-
-```
-
-这里我们就可以操作24C02去进行写入读取了。
-
-###### 24C02拓展：对其他类型变量的存储
-
-​	我们所编写的**iic_24C02_Wirte**，**iic_24C02_Read**函数是基于字节流（一个字节）来进行传输和储存的，所以我们所传输的数据基本都是一字节的（如uint8_t），而例如float变量，其由4个字节组成，我们需要将其转为有4个元素，每个元素为1字节的数组，再进行存诸和读取。
-
-​	这个功能的实现需要用到C库函数**memcpy()**。
-
-------
-
-​	**描述：**C 库函数 **void \*memcpy(void \*str1, const void \*str2, size_t n)** 从存储区 **str2** 复制 **n** 个字节到存储区 **str1**。*改变的是**str1***。
-
-------
-
-```c
-uint8_t Save_buffer[4];
-float myFloat = 12.34;
-float ReadFloat;
-uint8_t Read_buffer[4];
-
-/*写入浮点数*/
-memcpy(Save_buffer,&myFloat,sizeof(myFloat));
-iic_24C02_Wirte(0x00,Save_buffer,sizeof(Save_buffer));
-/*读取浮点数*/
-iic_24C02_Read(0x00,Read_buffer,sizeof(Read_buffer));
-memcpy(&ReadFloat,Read_buffer,sizeof(ReadFloat));
-```
-
-
-
-##### MCP4017
-
-​	这玩意压根没见用过，但来都来了，搞吧。写入读取相比24C02更加简单。
-
-![MCP4017](./Pic/18.png)
-
-手册上给的并不好看，直接记忆也无妨：
-
-```c
-//MPC代码
-void Mpc_Wirte(uint8_t pucBuf)
-{
-	
-	I2CStart();
-	I2CSendByte(0x5E);
-	I2CWaitAck();
-	
-	I2CSendByte(pucBuf);
-	I2CWaitAck();
-	I2CStop();
-	
-}
-
-uint8_t Mpc_Read(void)
-{
-	uint8_t val;
-	I2CStart();
-	I2CSendByte(0x5F);
-	I2CWaitAck();
-	
-	val = I2CReceiveByte();
-	I2CSendNotAck();		//同样在读时，发送无应答（实际上无应答这个说法啊……不知道外国人咋想）
-	I2CStop();
-	
-	return val;
-}
-```
-
-### 8.外设&逻辑编写思路
-
-​	考试时间是5个小时，这个时间理论上是充足的，我们整理一下我们的思路。
-
-​	首先由cubeMX生成源工程代码Source，其次复制，将其复制到另一个文件夹Object。此时，在Inc和Src中新建我们的BSP文件夹，同时参考题目，新建和移植我们所需外设的工程.c.h文件，并将他们添加到工程中。这个过程尽量快，尽量不要出错。
-
-​	外设处理完成之后就是应用层程序的编写，如果此时我们的题目相当复杂，也可以单独封装一个.h.c文件。应用层需要花些心思。但是题目一定是围绕我们的外设相应展开。
-
-​	一些东西是我们的良好工具：
-
-- 状态机
-	
-- 按键读取值(Key_Up,Key_Down)
-	
-- uwTick值计时
-	
-- sprintf(),memcpy()等C库函数。
-	
-- Debug调试器
-	
-- 位运算
-	
-- 枚举（enum）
-#### Bug调试
-
-​	写的程序基本上会出错，遇到bug不要急，我们有Debug调试器，调试就是，为了更高效的去使用调试器，我们避免成无头苍蝇，按一定的顺序和思路去寻找到底是哪里出了问题。
-
-1. 查看外设代码是否正确配置。
-2. 从头或从尾开始代码Debug，找出代码从哪个步骤开始出问题的。
-3. 相应打断点，运行。
-4. 尝试修改。
-
-### The End
-
-​	我们对我们配置的外设进行一定的总结：
-
-| 外设/需要修改处 | Drivers Hal库 | stm32g4xx_hal_conf.h | stm32g4xx_it.c | System Clock Configuration |
-| --------------- | ------------- | -------------------- | -------------- | -------------------------- |
-| LED&LCD&KEY     | 无            | 无                   | 无             | 无                         |
-| ADC             | 需（包含LL）  | 需                   | 需             | 需                         |
-| PWM_OUT         | 无            | 需                   | 无             | 无                         |
-| PWM_IN          | 无            | 需                   | 需             | 无                         |
-| UART            | 需            | 需                   | 需             | 需                         |
-| I2C             | 无            | 无                   | 无             | 无                         |
-
-这个表是根据我个人的CodeMX做的，更换版本就很有可能不同……比赛又更换了版本，我得再试试。
-
-2025年4月2日更新：比赛的CubeMX版本为6.14.0，目前使用起来问题不大，经过测试，不再从System Clock Configuration中生成文件。这对于我们是个好消息。
-
-2025年4月6日更新：比赛资料包已经给出：
-
-![](./Pic/19.png)
-
-不详细解释，只是Tools里有CudeMX6.14.0安装包，以防万一，在CudeMX中的Help界面可以安装器件包。同样给出了keil的器件包，在keil中导入器件包（下图）。
-
-![](./Pic/20.png)
-
-![](./Pic/21.png)
-
-![](./Pic/22.png)
-
-​	主观题现在就总结到这个程度。早春的月光清冷地随凉风透过半开的窗户，窗户的玻璃上又随灯光反射着我和电脑、键盘的影子。虽说我常质疑意义这个东西是否有意义，此时又不免思考：我做这一切的意义是什么，究竟想要的是什么。大抵，比赛的目的也只是为了知识。浮名会散去，荣誉会散去，唯有知识是留存在自己身上的，这哗啦哗啦一长篇下来啊，你估计也明白了，我们此行的目的几乎已经达到了。
-
-------
-
-比赛时间：（25）4月13日周日9：00 —— 14：00
-
-看考场：（25）4月12日周六 15--16点
-
-身份证	准考证
-黑色签字笔（考场提供草稿纸）
-
-带饭（方便的，别太离谱的）
-
-可以自带比赛用板（单片机？）
-可以自带 万用表 示波器
-可以自带鼠标（不能带键盘：血和泪）？？？
-
-以上交给工作人员
-
-------
-
+[设计模式：一目了然的状态机图_状态机图怎么画-CSDN博客](https://blog.csdn.net/xinghuanmeiying/article/details/81586954?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.add_param_isCf&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.add_param_isCf)

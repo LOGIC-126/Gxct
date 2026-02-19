@@ -1,1 +1,5 @@
 资料包/
+MDK-ARM/
+*.uvprojx
+.vscode/
+*.uvoptx

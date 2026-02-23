@@ -1,5 +1,7 @@
 资料包/
 MDK-ARM/
+Source/
+Drivers/
 *.uvprojx
 .vscode/
 *.uvoptx
@@ -16,3 +18,4 @@ MDK-ARM/
 *.lst
 *.bak
 *.tmp
+*.mxproject

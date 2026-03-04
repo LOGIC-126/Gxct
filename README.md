@@ -1,16 +1,12 @@
 # 蓝桥杯备赛日志
 
-[TOC]
-
-
-
 ## 零、前置知识
 
 ​	基础不牢，地动山摇。这里简单补充一下一些可能需要的前置知识。
 
-### 1、运算
+ ### 1、运算
 
-#### 算术运算符
+ #### 算术运算符
 
 ​	很简单，不叨扰。
 
@@ -26,7 +22,7 @@
 
 ​	务必熟记他们的作用（尤其是自增自减），在一些数学处理中会有很大作用。
 
-##### 1. 除法 (`/`) 与 取模 (`%`)：不仅是算术
+  ##### 1. 除法 (`/`) 与 取模 (`%`)：不仅是算术
 
 这两个符号在不同数据类型中，表现大不相同。
 
@@ -194,6 +190,43 @@ while (1) {
 }
 ```
 
+### 3、一些简单算法
+
+我们需要了解一点简单的算法知识来应对题目，帮助我们完成任务。
+
+```c
+//最大值
+s16 max(s16* n, u8 len) {
+    s16 max_val = n[0]; 
+    for (u8 i = 1; i < len; i++) {
+        if (n[i] > max_val) {
+            max_val = n[i];
+        }
+    }
+    return max_val;
+}
+```
+
+```c
+//最小值
+s16 min(s16* n, u8 len) {
+    s16 min = n[0]; 
+    for (u8 i = 1; i < len; i++) {
+        if (n[i] < min) {
+            min = n[i];
+        }
+    }
+    return min;
+}
+```
+
+```c
+//绝对值
+#define ABS(x) ((x) < 0 ? -(x) : (x))
+```
+
+
+
 ## 一，主观题
 
 ### 引言：
@@ -265,6 +298,33 @@ void Led_Disp(uint8_t ucLed)
 ```
 
 对GPIOC进行统一操作，通过ucLed变量点亮 PC8到PC15，左移八位是因为原变量为uint16_t（0x0000）类型，uint8_t（0x00）左移8为与其GPIO对应。而对PD2的操作相当于对锁存器的激活。16进制转2进制的知识我们在此不再赘述。
+
+​	我们对灯进行操作，实际上是对**ucLed**的值进行操作，这里通过位运算实现对于每个灯的控制。
+
+```c
+uint8_t blink = 1;
+void Led_Proc(void)
+{
+	if((uwTick - ledT) < 100)	return;
+	ledT = uwTick;
+	uint8_t led = 0x00;
+	
+	if(condition1)
+		led = led|0x01;	// 第一个灯亮 led = 0x01
+	if(condition2)
+	{
+		blink = !blink;
+		led = led|(blink<<1);	// 第二个灯闪烁 led = 0x03 (00000011) 或者 0x01,随周期闪烁
+	}
+	if(condition3)
+		led |= 0x04;	// 第三个灯亮 led = 0x07 (00000111)
+	
+    Led_disp(led);
+}
+
+```
+
+
 
 #### ②KEY
 
@@ -370,6 +430,18 @@ void Key_Proc(void)
 ```
 
 程序应该对，在Key_Peroid小的情况下，Key_Proc()里的减速分频对其没有太大影响。
+
+界面选择：
+
+```c
+void Key_ProcN(void)	// 切换LCD的按键，在三个界面中切换
+{
+	if(Sta_Lcd < 3)	Sta_Lcd++;
+	else{	
+		Sta_Lcd = 1;
+	}
+}
+```
 
 无操作1秒钟后切换状态：
 
@@ -640,9 +712,11 @@ LCD_DisplayStringLine(Line2, LCD_Str);
 
    ![PWMIN2](./Pic/12.png)
 
-   从模式选择Reset模式（具体原因我还不太明白），边缘选择TI1FP1，时钟也选择内部时钟。
+   从模式选择Reset模式（具体原因我还不太明白），边缘选择**TI1FP1**，时钟也选择内部时钟。
 
-   通道1选择输入捕获直接模式，通道2选择输入捕获间接模式，1选择上升沿，2选择下降沿。
+   如果输入口是CH2，那就选边缘**TI2FP2**，这点是不同的。
+
+   通道1选择输入捕获直接模式，通道2选择输入捕获间接模式，1选择上升沿，2选择下降沿（**TI1FP1**）。
 
    分频也是采用79，而自动重装载值给到最大就行。
 
@@ -654,19 +728,19 @@ LCD_DisplayStringLine(Line2, LCD_Str);
 
    生成的中断代码也是略有不同，心里要有印象。
 
-   代码的移植这里可以和其他TIM相关外设一起配置一起移植，步骤都差不多，这里不再多说。
+   还需要在NVIC界面修改中断优先级，将其中断优先级改低，滴答计时器的中断优先级改高。
 
    ##### 得到频率和占空比
 
-   ​	同pwm输出类似，我们的输入捕获也需要代码打开：
-
+   ​	同pwm输出类似，我们的输入捕获也需要代码打开，**一定不要忘了这一点**：
+   
    ```c
    	HAL_TIM_IC_Start_IT(&htim8,TIM_CHANNEL_1);
    	HAL_TIM_IC_Start_IT(&htim8,TIM_CHANNEL_2);
    ```
 
-   ​	开启时要打开两个，且以中断形式打开。然后我们需要写一个中断函数，这个中断函数我是背不下来的，但我们可以找到他，在`stm32g4xx_it.c`中，底部会有一个函数：
-
+   ​	如果测量占空比，开启时要打开两个，且以中断形式打开。然后我们需要写一个中断函数，这个中断函数我是背不下来的，但我们可以找到他，在`stm32g4xx_it.c`中，底部会有一个函数：
+   
    ```c
    /**
      * @brief This function handles TIM8 capture compare interrupt.
@@ -713,11 +787,14 @@ LCD_DisplayStringLine(Line2, LCD_Str);
       	{
       		if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) //通道判别
       		{
-      			PWM_Up_Cnt = HAL_TIM_ReadCapturedValue(&htim8,TIM_CHANNEL_1)+1;
-      			Duty = (float)PWM_Down_Cnt/PWM_Up_Cnt;
+               // 周期
+      			PWM_Up_Cnt = HAL_TIM_ReadCapturedValue(&htim8,TIM_CHANNEL_1)+1;// 一定+1
+      			// 占空比
+               Duty = (float)PWM_Down_Cnt/PWM_Up_Cnt;
       		}
       		else if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)	//通道判别
       		{
+               // 高电平时间
       			PWM_Down_Cnt = HAL_TIM_ReadCapturedValue(&htim8,TIM_CHANNEL_2)+1;
       		}
       	}
@@ -737,6 +814,8 @@ LCD_DisplayStringLine(Line2, LCD_Str);
    **t=100 (下一个上升沿)**：
    
    硬件把 `100` 存入 `CCR1`。硬件把 `CNT` 清零（重新开始）。触发中断，你的变量 `PWM_Up_Cnt` 变为 `101`。**计算**：`Duty = 31 / 101`。计算完成。
+   
+   ![](.\Pic\24pwm.png)
    
    ### 6.串口编写
    
@@ -931,7 +1010,52 @@ LCD_DisplayStringLine(Line2, LCD_Str);
    }
    ```
    
-   ### 8.外设&逻辑编写思路
+   ### 8.RTC时钟
+   
+   ​	感觉用的不多，简单应用实际上可以用滴答定时器替代。这里还是学一下吧。Mode激活时钟与日历。然后将分频设置为125与6000（相乘等于750KHz），使1s产生一次中断。
+   
+   <img src=".\Pic\rtc1.png" style="zoom: 33%;" />
+   
+   设定时间和日期，按要求设置。
+   
+   <img src="D:\E\Gxct\Pic\rtc3.png" style="zoom:50%;" />
+   
+   需要在时钟树界面配置时钟，如下：
+   
+   ![](.\Pic\rtc2.png)
+   
+   这里就设置了RTC频率为750KHz，故我们对其进行125x6000分频。
+   
+   **代码：**
+   
+   ​	通过生成的**rtc.h**，我们可以顺藤摸瓜找到**stm32g4xx_hal_rtc.h**，我们所需的东西都在里面。在里面找到下面两个结构体，在main中定义。
+   
+   ```C
+   RTC_TimeTypeDef rtctime;	// 时间结构体
+   RTC_DateTypeDef rtcdate;	// 日期结构体
+   ```
+   
+   ​	可以通过以下函数获取日期和时间：
+   
+   ```c
+   HAL_RTC_GetTime(&hrtc,&rtctime,RTC_FORMAT_BIN);
+   HAL_RTC_GetDate(&hrtc,&rtcdate,RTC_FORMAT_BIN);
+   ```
+   
+   这两个函数必须同时使用，不然有bug。
+   
+   对时间的显示：
+   
+   ```c
+   			sprintf((char *)str,"   %02dH%02dM%02dS   ",rtctime.Hours,rtctime.Minutes,rtctime.Seconds);		// 时 分 秒
+   			LCD_DisplayStringLine(Line7, str);
+   			sprintf((char *)str,"   %02dY%02dM%02dD%02dW   ",rtcdate.Year,rtcdate.Month,rtcdate.Date,rtcdate.WeekDay);// 年 月 日 星期
+   			LCD_DisplayStringLine(Line8, str);
+   ```
+   
+   学习了这个，我们就可以做定时炸弹了（）。
+   
+   ### 9.外设&逻辑编写思路
    
    考试时间是5个小时，这个时间理论上是充足的，我们整理一下我们的思路。
    
